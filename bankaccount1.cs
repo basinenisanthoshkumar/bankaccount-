@@ -3,8 +3,8 @@ namespace BankApplication
 {
     interface IBankAccount
     {
-        bool DepositAmount(int amount);
-        bool WithdrawAmount(int amount);
+        bool DepositAmount(decimal amount);
+        bool WithdrawAmount(decimal amount);
         decimal CheckBalance();
     }
     public class SavingAccount : IBankAccount
@@ -12,33 +12,30 @@ namespace BankApplication
         private decimal Balance = 0;
         private readonly decimal PerDayWithdrawLimit = 10000;
         private decimal TodayWithdrawal = 0;
-        public bool DepositAmount(int Amount)
+        public bool DepositAmount(decimal Amount)
         {
-            var result = validation.ValidateInput(Amount);
-            Balance = Balance + result;
-            Console.WriteLine($"Deposited: {result}");
+            Balance = Balance + Amount;
+            Console.WriteLine($"Deposited: {Amount}");
             Console.WriteLine($"Account Balance: {Balance}");
             return true;
         }
-        public bool WithdrawAmount(int Amount)
+        public bool WithdrawAmount(decimal Amount)
         {
-            var result1 = validation.ValidateInput(Amount);
-
-            if (Balance <result1)
+            if (Balance < Amount)
             {
                 Console.WriteLine("Insufficient balance");
                 return false;
             }
-            else if (TodayWithdrawal + result1 > PerDayWithdrawLimit)
+            else if (TodayWithdrawal + Amount > PerDayWithdrawLimit)
             {
                 Console.WriteLine("Withdrawal attempt failed");
                 return false;
             }
             else
             {
-                Balance = Balance - result1;
-                TodayWithdrawal = TodayWithdrawal + result1;
-                Console.WriteLine($"Successfully Withdraw: {result1}");
+                Balance = Balance - Amount;
+                TodayWithdrawal = TodayWithdrawal + Amount;
+                Console.WriteLine($"Successfully Withdraw: {Amount}");
                 Console.WriteLine($"Your Account Balance: {Balance}");
                 return true;
             }
@@ -52,14 +49,14 @@ namespace BankApplication
     {
         private decimal Balance = 0;
 
-        public bool DepositAmount(int Amount)
+        public bool DepositAmount(decimal Amount)
         {
             Balance = Balance + Amount;
             Console.WriteLine($"Deposited: {Amount}");
             Console.WriteLine($"Account Balance: {Balance}");
             return true;
         }
-        public bool WithdrawAmount(int Amount)
+        public bool WithdrawAmount(decimal Amount)
         {
             if (Balance < Amount)
             {
@@ -81,46 +78,53 @@ namespace BankApplication
     }
     public static class validation
     {
-        public static int ValidateInput(int inputValue)
-        {
-            // Check if the input is a positive integer
-            if (inputValue >= 0)
-            {
-                // Check if the input is a decimal or float
-                if (inputValue == (int)inputValue)
-                {
-                    return inputValue;
-                }
-                else
-                {
-                    
-                    throw new Exception("Enter valid amount");
-                }
-            }
-               return 0;
-            
-        }
+        
     }
+
     class Program
     {
         static void Main(string[] args)
         {
-     
-            Console.WriteLine("Saving Account:");
-            IBankAccount savingAccount = new SavingAccount();
-            Console.WriteLine("Enter Depoist Amount:-");
-            savingAccount.DepositAmount(Convert.ToInt32(Console.ReadLine()));
-            Console.WriteLine("Enter Withdraw Amount:-");
-            savingAccount.WithdrawAmount(Convert.ToInt32(Console.ReadLine()));
-            Console.WriteLine($"Saving Account Balance: {savingAccount.CheckBalance()}");
-            Console.WriteLine("\n Current Account:");
-            IBankAccount currentAccount = new CurrentAccount();
-            Console.WriteLine("Enter Depoist Amount:-");
-            currentAccount.DepositAmount(Convert.ToInt32(Console.ReadLine()));
-            Console.WriteLine("Enter Withdraw Amount:-");
-            currentAccount.WithdrawAmount(Convert.ToInt32(Console.ReadLine()));
-            Console.WriteLine($"Current Account Balance: {currentAccount.CheckBalance()}");
-            Console.ReadKey();
+            static int ValidateInput(int inputValue)
+            {
+
+                if (inputValue >= 0)
+                {
+                    if (inputValue == (int)inputValue)
+                    {
+                        return inputValue;
+                    }
+                    else
+                    {
+                        throw new Exception("Enter valid amount");
+                    }
+                }
+                return 0;
+
+            }
+
+            try
+            {
+                Console.WriteLine("Saving Account:");
+                IBankAccount savingAccount = new SavingAccount();
+                Console.WriteLine("Enter Depoist Amount:-");
+                savingAccount.DepositAmount(ValidateInput((Convert.ToInt32(Console.ReadLine()))));
+                Console.WriteLine("Enter Withdraw Amount:-");
+                savingAccount.WithdrawAmount(Convert.ToInt32(Console.ReadLine()));
+                Console.WriteLine($"Saving Account Balance: {savingAccount.CheckBalance()}");
+                Console.WriteLine("\n Current Account:");
+                IBankAccount currentAccount = new CurrentAccount();
+                Console.WriteLine("Enter Depoist Amount:-");
+                currentAccount.DepositAmount(Convert.ToInt32(Console.ReadLine()));
+                Console.WriteLine("Enter Withdraw Amount:-");
+                currentAccount.WithdrawAmount(Convert.ToInt32(Console.ReadLine()));
+                Console.WriteLine($"Current Account Balance: {currentAccount.CheckBalance()}");
+                Console.ReadKey();
+            }
+             catch(Exception ex)
+            {
+                Console.WriteLine("Enter Valid Format");
+            }
         }
     }
 
