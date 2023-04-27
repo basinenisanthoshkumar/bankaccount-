@@ -1,4 +1,6 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
+
 namespace BankApplication
 {
     interface IBankAccount
@@ -78,28 +80,32 @@ namespace BankApplication
     }
     public static class validation
     {
-        
+
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            static int ValidateInput(int inputValue)
+             static int ValidateInput(int inputValue)
             {
 
                 if (inputValue >= 0)
                 {
                     if (inputValue == (int)inputValue)
                     {
-                        Console.WriteLine(inputValue);
+                       return inputValue;
                     }
                     else
                     {
-                       return throw new Exception("Enter valid amount");
+                       throw new Exception("Enter valid amount");
                     }
                 }
-                
+                else
+                {
+                    throw new Exception("Enter valid amount");
+                }
+
 
             }
 
@@ -121,7 +127,7 @@ namespace BankApplication
                 Console.WriteLine($"Current Account Balance: {currentAccount.CheckBalance()}");
                 Console.ReadKey();
             }
-             catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Enter Valid Format");
             }
@@ -129,19 +135,3 @@ namespace BankApplication
     }
 
 }
-<!-- public static void validate(int input)
-        {
-            
-                if (input >= 0)
-                {
-                    if (input == (int)input)
-                    {
-                        Console.WriteLine(input);
-                    }
-                    else
-                    {
-                        throw new Exception("ENTER VALID DATA");
-                    }
-                }
-
-        }    -->
